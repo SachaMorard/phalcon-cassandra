@@ -1,0 +1,27 @@
+{
+    "name": "sachoo/phalcon-cassandra",
+    "type": "library",
+    "description": "Cassandra library for Phalcon",
+    "license": "MIT",
+    "keywords": [
+        "phalcon",
+        "cassandra",
+        "nosql",
+        "database",
+        "driver",
+        "datastax"
+    ],
+    "require": {
+        "php": ">=5.5",
+        "ext-phalcon": "^3.0",
+        "ext-cassandra": "*",
+        "sachoo/phalcon-model-annotations": "1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phalcon\\": [
+                "Library/Phalcon/"
+            ]
+        }
+    }
+}
