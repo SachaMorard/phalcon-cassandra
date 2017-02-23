@@ -1069,17 +1069,17 @@ class Cassandra extends \Phalcon\Db\Adapter implements \Phalcon\Events\EventsAwa
 
     public function getSQLStatement()
     {
-        throw new Exception('Method unable');
+        return $this->getCQLStatement();
     }
 
     public function getRealSQLStatement()
     {
-        throw new Exception('Method unable');
+        return $this->getRealCQLStatement();
     }
 
     public function getSQLBindTypes()
     {
-        throw new Exception('Method unable');
+        return $this->getCQLBindTypes();
     }
 
     public function listViews($schemaName = null)
