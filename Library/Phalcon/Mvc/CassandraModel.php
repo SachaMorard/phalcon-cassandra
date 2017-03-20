@@ -13,7 +13,6 @@ namespace Phalcon\Mvc;
 use Phalcon\Mvc\Model\Exception;
 use Phalcon\Mvc\Model\Resultset\Simple as SimpleResult;
 use Phalcon\Cassandra\DataType;
-use PhalconStart\Models\TestTableC;
 
 class CassandraModel extends \Phalcon\Mvc\Model
 {
@@ -125,9 +124,7 @@ class CassandraModel extends \Phalcon\Mvc\Model
     public static function find($parameters = null, $bindParams = null)
     {
         $model = get_called_class();
-        /** @var TestTableC $instance */
         $instance = new $model;
-        $ouais = $instance->getReadConnectionService();
         $cassandra = $instance->getDI()->get('dbCassandra');
         if (self::$_async) {
             self::$_async = false;
@@ -413,3 +410,4 @@ class CassandraModel extends \Phalcon\Mvc\Model
     }
 
 }
+
