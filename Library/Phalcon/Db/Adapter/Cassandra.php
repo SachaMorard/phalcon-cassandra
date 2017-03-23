@@ -10,7 +10,6 @@
 
 namespace Phalcon\Db\Adapter;
 
-use Cassandra\ExecutionOptions;
 use Cassandra\BatchStatement;
 use Cassandra\Keyspace;
 use Cassandra\Table;
@@ -148,10 +147,6 @@ class Cassandra extends \Phalcon\Db\Adapter implements \Phalcon\Events\EventsAwa
      * @var \Cassandra\Session
      */
     protected $_session;
-    /**
-     * @var \Cassandra\ExecutionOptions
-     */
-    protected $_options;
     /**
      * @var \Cassandra\BatchStatement
      */
@@ -512,7 +507,7 @@ class Cassandra extends \Phalcon\Db\Adapter implements \Phalcon\Events\EventsAwa
                 return false;
             }
         }
-        $options = new ExecutionOptions(['arguments' => $placeholders]);
+        $options = ['arguments' => $placeholders];
         if ($this->_async) {
             $this->_async = false;
             $result = $this->_session->executeAsync($preparedStatement, $options);
