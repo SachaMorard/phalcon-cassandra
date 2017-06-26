@@ -11,8 +11,8 @@ cache:
     - ~/cphalcon
 
 before_install:
-  - composer install --prefer-source --no-interaction
   - bin/install-phalcon.sh 3.0.x
+  - composer install --prefer-source --no-interaction
 
 script:
   - php -r "echo \Phalcon\Version::get();"
