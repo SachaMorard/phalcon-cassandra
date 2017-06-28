@@ -1,16 +1,11 @@
 language: php
 
 php:
-  - 5.5
-  - 5.6
-  - 7.0
   - 7.1
 
 cache:
   directories:
     - vendor
-    - ~/.composer/cache
-    - ~/cphalcon
 
 sudo: required
 
@@ -18,10 +13,16 @@ services:
   - docker
 
 before_install:
-  - composer install --prefer-source --no-interaction
+  - docker network create --driver=bridge --subnet=172.30.0.0/16 my-net
+  - docker pull cassandra:3.10
+  - docker run -d -p 0.0.0.0:9160:9160 -p 0.0.0.0:9042:9042 --network=my-net --ip=172.30.100.104 --rm --name cassandra --hostname cassandra cassandra
+  - docker build docker/php7.1 -t phalcon-cassandra
+  - docker run -d --name phalcon-cassandra --network=my-net --rm -v `pwd`:/home/www -w /home/www --add-host=cassandra:172.30.100.104 phalcon-cassandra
+  - docker exec -it phalcon-cassandra composer install --prefer-source --no-interaction
+  - docker exec -it cassandra /bin/bash -c "echo \"DROP KEYSPACE IF EXISTS testphalcon; CREATE KEYSPACE testphalcon WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }; exit\" | cqlsh"
 
 script:
-  - php -r "echo 'ok';"
+  - docker exec -it phalcon-cassandra vendor/bin/codecept run unit
 
 notifications:
     email:

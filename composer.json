@@ -18,7 +18,8 @@
         "sachoo/phalcon-model-annotations": "1.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.2"
+        "phpunit/phpunit": "^6.2",
+        "codeception/codeception": "2.*"
     },
     "autoload": {
         "psr-4": {
