@@ -19,8 +19,7 @@ before_install:
   - docker build docker/php7.1 -t phalcon-cassandra
   - docker run -d --name phalcon-cassandra --network=my-net --rm -v `pwd`:/home/www -w /home/www --add-host=cassandra:172.30.100.104 phalcon-cassandra
   - docker exec -it phalcon-cassandra composer install --prefer-source --no-interaction
-  - docker exec -it cassandra cqlsh -e 'DROP KEYSPACE IF EXISTS testphalcon'
-  - docker exec -it cassandra cqlsh -e "CREATE KEYSPACE testphalcon WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }"
+  - ./createdb.sh
 
 script:
   - docker exec -it phalcon-cassandra vendor/bin/codecept run unit
