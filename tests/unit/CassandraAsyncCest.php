@@ -316,178 +316,143 @@ class CassandraAsyncCest
 
         $cassandra->nextWillBeAsync()->begin();
         $transactions = $cassandra->nextWillBeAsync()->addTransaction("INSERT INTO test (id, fname, lname) VALUES (?,?,?)", [new \Cassandra\Bigint(1), 'sacha', 'morard']);
-        //1
         $I->assertTrue($transactions);
-        //2
         $cassandra->nextWillBeAsync()->commit();
 
         sleep(1);
-        //3
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test');
         $I->assertEquals('sacha', $result['fname']);
-        //4
         $I->assertTrue($cassandra->nextWillBeAsync()->execute("INSERT INTO test (id, fname, lname) VALUES (?,?,?)", [new \Cassandra\Bigint(2),'toto', 'tata']));
 
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->query('SELECT * FROM test');
-        //5
         $I->assertTrue($result instanceof \Phalcon\Db\Result\Cassandra);
         $fetchArray = $result->fetchArray();
         $fetchAll = $result->fetchAll();
         $fetch = $result->fetch();
-        //6
         $I->assertTrue($fetchAll[0] instanceof stdClass);
-        //7
         $I->assertTrue($fetch instanceof stdClass);
 
         $result->getInternalResult();
         $result->dataSeek(2);
         $result->execute();
+
         sleep(1);
         $result = $cassandra->nextWillBeAsync()->query("SELECT * FROM test");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         $fetchAll = $result->fetchAll();
         $fetch = $result->fetch();
-        //8
         $I->assertEquals(3, count($fetchAll[0]));
-        //9
         $I->assertEquals(3, count($fetch));
 
         $result = $cassandra->nextWillBeAsync()->query("SELECT * FROM test");
         $result->setFetchMode(\PDO::FETCH_BOTH);
         $fetchAll = $result->fetchAll();
         $fetch = $result->fetch();
-        //10
         $I->assertEquals(6, count($fetchAll[0]));
-        //11
         $I->assertEquals(6, count($fetch));
 
         $result = $cassandra->nextWillBeAsync()->query("SELECT * FROM test");
         $result->setFetchMode(\PDO::FETCH_NUM);
         $fetchAll = $result->fetchAll();
         $fetch = $result->fetch();
-        //12
         $I->assertEquals(3, count($fetchAll[0]));
-        //13
         $I->assertEquals(3, count($fetch));
 
         $result = $cassandra->nextWillBeAsync()->query("SELECT * FROM test");
         $result->setFetchMode(\PDO::FETCH_OBJ);
         $fetchAll = $result->fetchAll();
         $fetch = $result->fetch();
-        //14
         $I->assertTrue(is_object($fetchAll[0]));
-        //15
         $I->assertTrue(is_object($fetch));
 
 
-        //16
         $I->assertTrue($cassandra->nextWillBeAsync()->execute("INSERT INTO test (id, fname, lname) VALUES (?, ?, ?)", array(new \Cassandra\Bigint(3), 'toto', 'morard')));
 
-        //17
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 3');
         $I->assertEquals('toto', $result['fname']);
 
 
-        //18
         $I->assertTrue($cassandra->nextWillBeAsync()->execute("INSERT INTO test (id, fname, lname) VALUES (:id, :fname, :lname)", array('fname' => 'bonjour', 'id' => new \Cassandra\Bigint(4),'lname' => 'morard')));
 
-        //19
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 4');
         $I->assertEquals('bonjour', $result['fname']);
 
-        //20
         $stm = $cassandra->nextWillBeAsync()->prepare("INSERT INTO test (id, fname, lname) VALUES (?, ?, ?)");
         $I->assertTrue($stm instanceof \Cassandra\PreparedStatement);
 
-        //21
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->executePrepared($stm, array(new \Cassandra\Bigint(5), 'toto', 'morard'));
         $I->assertTrue($result);
 
-        //22
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 5');
         $I->assertEquals('toto', $result['fname']);
 
-        //23
         $stm = $cassandra->nextWillBeAsync()->prepare("INSERT INTO test (id, fname, lname) VALUES (:id, :fname, :lname)");
         $I->assertTrue($stm instanceof \Cassandra\PreparedStatement);
 
-        //24
         $result = $cassandra->nextWillBeAsync()->executePrepared($stm, array('fname' => 'bilou', 'id' => new \Cassandra\Bigint(6),'lname' => 'morard'));
         $I->assertTrue($result);
 
-        //25
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 6');
         $I->assertEquals('bilou', $result['fname']);
 
-        //26
         $result = $cassandra->nextWillBeAsync()->convertBoundParams("INSERT INTO test (id, fname, lname) VALUES (?0, ?1, ?2)", array(5, 'toto', 'morard'));
         $I->assertEquals('INSERT INTO test (id, fname, lname) VALUES (?, ?, ?)', $result['cql']);
-        //27
         $I->assertEquals(5, $result['params'][0]);
-        //28
         $I->assertEquals('toto', $result['params'][1]);
 
-        //29
         $result = $cassandra->nextWillBeAsync()->convertBoundParams("INSERT INTO test (id, fname, lname) VALUES (:id:, :fname:, :lname:)", array('fname' => 'tata','lname' => 'morard', 'id' => 44));
         $I->assertEquals('INSERT INTO test (id, fname, lname) VALUES (?, ?, ?)', $result['cql']);
-        //30
         $I->assertEquals(44, $result['params'][0]);
-        //31
         $I->assertEquals('tata', $result['params'][1]);
 
-        //32
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->limit("SELECT column_name FROM system.schema_columns", 5);
         $I->assertEquals('SELECT column_name FROM system.schema_columns LIMIT 5', $result);
 
-        //33
         $I->assertNull($cassandra->nextWillBeAsync()->getCQLBindTypes());
 
-        //34
         $I->assertNull($cassandra->nextWillBeAsync()->getCqlVariables());
 
-        //35
         $I->assertEquals("'some dan''gerous value'", $cassandra->nextWillBeAsync()->escapeString("some dan'gerous value"));
 
-        //36
         $I->assertEquals('"bonjour"', $cassandra->nextWillBeAsync()->escapeIdentifier("bonjour"));
 
-        //37
         $I->assertEquals("'bonjour'", $cassandra->nextWillBeAsync()->getColumnList(array('bonjour')));
 
-        //38
         $I->assertTrue($cassandra->nextWillBeAsync()->delete('test', 'id=1'));
-        //39
+
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 1');
         $I->assertFalse($result);
 
         $cassandra->nextWillBeAsync()->delete('test', 'id=1');
-
-        //40
         $I->assertTrue($cassandra->nextWillBeAsync()->insert('test', array(new \Cassandra\Bigint(1), 'roubin', 'momo'), array('id', 'fname', 'lname')));
-        //41
+
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 1');
         $I->assertEquals('roubin', $result['fname']);
 
         $cassandra->nextWillBeAsync()->delete('test', 'id=1');
-
-        //42
         $I->assertTrue($cassandra->nextWillBeAsync()->insertAsDict('test', array('id' => new \Cassandra\Bigint(1),  'fname' => 'sacha',  'lname' => 'morard')));
-        //43
+
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 1');
         $I->assertEquals('sacha', $result['fname']);
-
-        //44
         $I->assertTrue($cassandra->nextWillBeAsync()->update('test', array('lname'), array('kjlmklmk'), array('conditions' => "id = ? AND fname = ?", 'bind' => array(new \Cassandra\Bigint(1), 'sacha'))));
-        //45
+
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 1');
         $I->assertEquals('kjlmklmk', $result['lname']);
-
-        //46
         $I->assertTrue($cassandra->nextWillBeAsync()->updateAsDict('test', array('lname' => 'monsieur'), "id = 1 AND fname = 'sacha'"));
-        //47
+        sleep(1);
         $result = $cassandra->nextWillBeAsync()->fetchOne('SELECT * FROM test WHERE id = 1');
         $I->assertEquals('monsieur', $result['lname']);
-        sleep(1);
     }
 
     public function results(\UnitTester $I)

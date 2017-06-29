@@ -4,10 +4,12 @@ use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Application;
 
 
-define('BASE_PATH', dirname(__DIR__));
-define('APP_NAME', 'test');
-
-
+if(!defined('BASE_PATH')){
+    define('BASE_PATH', dirname(__DIR__));
+}
+if(!defined('APP_NAME')){
+    define('APP_NAME', 'test');
+}
 
 /**
  * The FactoryDefault Dependency Injector automatically registers the services that
