@@ -16,7 +16,7 @@ before_install:
   - ./install.sh
 
 script:
-  - docker exec -it phalcon-cassandra vendor/bin/codecept run unit
+  - docker exec -it php-phalcon-cassandra vendor/bin/codecept run unit
 
 notifications:
     email:
