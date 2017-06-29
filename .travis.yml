@@ -17,6 +17,7 @@ before_install:
 
 script:
   - docker exec php-phalcon-cassandra vendor/bin/codecept run unit PhalconCest
+  - docker exec php-phalcon-cassandra vendor/bin/codecept run unit CassandraCest
 
 notifications:
     email:
