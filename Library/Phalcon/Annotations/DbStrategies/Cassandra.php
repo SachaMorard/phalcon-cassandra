@@ -181,6 +181,8 @@ class Cassandra
             MetaData::MODELS_AUTOMATIC_DEFAULT_UPDATE => array(),
             // Default values
             MetaData::MODELS_DEFAULT_VALUES => array(),
+            // Empty String
+            MetaData::MODELS_EMPTY_STRING_VALUES => array(),
             //Size of fields
             ModelStrategy::METADATA_SIZES_OF_FIELDS => array(),
             //Table indexes
