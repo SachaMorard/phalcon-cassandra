@@ -1,7 +1,7 @@
 # Cassandra library for Phalcon
 
 
-![status](https://travis-ci.org/SachaMorard/phalcon-cassandra.svg?branch=master)
+![status](https://api.travis-ci.org/SachaMorard/phalcon-cassandra.svg?branch=master)
 
 
 ## Requirements
