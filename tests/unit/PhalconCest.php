@@ -7,7 +7,7 @@ class PhalconCest
 {
     public function version(\UnitTester $I)
     {
-        $I->assertEquals(\Phalcon\Version::get(), '3.3.1');
+        $I->assertEquals(\Phalcon\Version::get(), '3.4.4');
     }
 }
 
